@@ -20,4 +20,5 @@ bertはpytorchモデル
 - [【PyTorch】BERTの使い方 - 日本語pre-trained modelsをfine tuningして分類問題を解く- Qiita](https://qiita.com/kenta1984/items/7f3a5d859a15b20657f3)
 - [PyTorchで日本語BERTによる文章分類＆Attentionの可視化を実装してみた - Qiita](https://qiita.com/m__k/items/e312ddcf9a3d0ea64d72)
 - [bert](https://huggingface.co/transformers/index.html)
+- [](https://colab.research.google.com/github/huggingface/notebooks/blob/master/examples/text_classification.ipynb)
 - [ちびむすドリル小学生](https://happylilac.net/mu1605121851.html)
