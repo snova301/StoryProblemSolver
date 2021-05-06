@@ -88,7 +88,7 @@ def main_sample():
 
     # データセットを本文とカテゴリーID列だけにする
     livedoor_data = livedoor_data[['title', 'category_id']]
-    print(livedoor_data)
+    # print(livedoor_data)
     # display(livedoor_data.head())
 
     train_df, test_df = train_test_split(livedoor_data, train_size=0.8)
@@ -130,14 +130,14 @@ def main_sample():
     for param in classifier.bert.encoder.layer[-1].parameters():
         param.requires_grad = True
 
-    for param in classifier.bert.encoder.layer[-2].parameters():
-        param.requires_grad = True
+    # for param in classifier.bert.encoder.layer[-2].parameters():
+    #     param.requires_grad = True
 
-    for param in classifier.bert.encoder.layer[-3].parameters():
-        param.requires_grad = True
+    # for param in classifier.bert.encoder.layer[-3].parameters():
+    #     param.requires_grad = True
 
-    for param in classifier.bert.encoder.layer[-4].parameters():
-        param.requires_grad = True
+    # for param in classifier.bert.encoder.layer[-4].parameters():
+    #     param.requires_grad = True
 
     # クラス分類のところもON
     for param in classifier.linear.parameters():
@@ -146,9 +146,9 @@ def main_sample():
     # 事前学習済の箇所は学習率小さめ、最後の全結合層は大きめにする。
     optimizer = optim.Adam([
         {'params': classifier.bert.encoder.layer[-1].parameters(), 'lr': 5e-5},
-        {'params': classifier.bert.encoder.layer[-2].parameters(), 'lr': 5e-5},
-        {'params': classifier.bert.encoder.layer[-3].parameters(), 'lr': 5e-5},
-        {'params': classifier.bert.encoder.layer[-4].parameters(), 'lr': 5e-5},
+        # {'params': classifier.bert.encoder.layer[-2].parameters(), 'lr': 5e-5},
+        # {'params': classifier.bert.encoder.layer[-3].parameters(), 'lr': 5e-5},
+        # {'params': classifier.bert.encoder.layer[-4].parameters(), 'lr': 5e-5},
         {'params': classifier.linear.parameters(), 'lr': 1e-4}
     ])
 
@@ -164,10 +164,12 @@ def main_sample():
 
     # エポック数は5で
     for epoch in range(5):
+        print('epoch : ', epoch)
 
         all_loss = 0
 
         for idx, batch in enumerate(train_iter):
+            print('idx : ', idx)
 
             classifier.zero_grad()
 
@@ -183,6 +185,9 @@ def main_sample():
 
             all_loss += batch_loss.item()
 
+            if idx==100:
+                break
+
         print("epoch", epoch, "\t" , "loss", all_loss)
 
 
@@ -190,8 +195,8 @@ def main_sample():
     prediction = []
 
     with torch.no_grad():
-        for batch in test_iter:
-
+        for counti, batch in enumerate(test_iter):
+            print('counti', counti)
             text_tensor = batch.Text[0].to(device)
             label_tensor = batch.Label.to(device)
 
@@ -200,6 +205,8 @@ def main_sample():
 
             prediction += list(pred.cpu().numpy())
             answer += list(label_tensor.cpu().numpy())
+            if counti==1:
+                break
 
     print(classification_report(prediction, answer, target_names=categories))
 
